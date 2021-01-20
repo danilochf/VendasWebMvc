@@ -27,6 +27,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.SalarioBase)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Departamento)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -47,10 +50,13 @@
                 @Html.DisplayFor(modelItem => item.SalarioBase)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Departamento.Nome)
+            </td>
+            <td>
                 <a asp-action="Editar" asp-route-id="@item.Id">Editar</a>
                 <a asp-action="Detalhes" asp-route-id="@item.Id">Detalhes</a>
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>            
+            </td>
         </tr>
         }
     </tbody>

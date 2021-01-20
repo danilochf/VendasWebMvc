@@ -6,16 +6,19 @@ namespace VendasWebMvc.Models
 {
     public class Vendedor
     {
+        private readonly VendasWebMvcContext _context;
         public int Id { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }
         public DateTime DataNascimento { get; set; }
         public double SalarioBase { get; set; }
         public Department Departamento { get; set; }
+        public int DepartmentId { get; set; }
         public ICollection<RegistroDeVendas> Vendas { get; set; } = new List<RegistroDeVendas>();
 
         public Vendedor()
-        {
+        {            
+
         }
 
         public Vendedor(int id, string nome, string email, DateTime dataNascimento, double salarioBase, Department departamento)
