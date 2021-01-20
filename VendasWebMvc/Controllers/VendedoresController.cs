@@ -7,6 +7,7 @@ using VendasWebMvc.Models;
 using VendasWebMvc.Servicos;
 using VendasWebMvc.Models.ViewModels;
 using VendasWebMvc.Servicos.Exceptions;
+using System.Diagnostics;
 
 namespace VendasWebMvc.Controllers
 {
@@ -46,14 +47,14 @@ namespace VendasWebMvc.Controllers
         {
             if(id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não fornecido" });
             }
 
             var obj = _vendedoresServicos.FindById(id.Value);            
 
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não Exite" });
             }
 
             return View(obj);
@@ -70,14 +71,14 @@ namespace VendasWebMvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não fornecido" });
             }
 
             var obj = _vendedoresServicos.FindById(id.Value);
 
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não Exite" });
             }
 
             return View(obj);
@@ -87,13 +88,13 @@ namespace VendasWebMvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não fornecido" });
             }
 
             var obj = _vendedoresServicos.FindById(id.Value);
             if(obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não Exite" });
             }
 
             List<Department> departamentos = _servicoDepartamento.FindAll();
@@ -107,7 +108,7 @@ namespace VendasWebMvc.Controllers
         {
             if (id != vendedor.Id)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = "Ids não correspondem" });
             }
 
             try
@@ -115,16 +116,27 @@ namespace VendasWebMvc.Controllers
                 _vendedoresServicos.Update(vendedor);
                 return RedirectToAction(nameof(Index));
             }
-            catch (NotFoundException)
+            catch (NotFoundException e)
             {
 
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = e.Message });
             }
-            catch (DbConcurrencyException)
+            catch (DbConcurrencyException e)
             {
 
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = e.Message });
             }
+        }
+
+        public IActionResult Error(string message)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            return View(viewModel);
         }
         
     }
